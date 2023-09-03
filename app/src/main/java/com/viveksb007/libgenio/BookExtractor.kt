@@ -1,53 +1,47 @@
-package com.viveksb007.libgenio;
+package com.viveksb007.libgenio
 
-import com.viveksb007.libgenio.filter.BookElementFilter;
-import com.viveksb007.libgenio.model.Book;
+import com.viveksb007.libgenio.filter.BookElementFilter
+import com.viveksb007.libgenio.model.Book
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
+import org.jsoup.select.Elements
+import java.util.Optional
+import java.util.stream.Collectors
 
-import org.jetbrains.annotations.NotNull;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-class BookExtractor {
-
-    List<Book> extractBooksFromDocument(Document document) {
+internal class BookExtractor {
+    fun extractBooksFromDocument(document: Document?): List<Book> {
         return Optional.ofNullable(document)
-                .map(doc -> doc.getElementsByTag("tr"))
-                .map(elements -> elements
-                        .stream()
-                        .filter(new BookElementFilter())
-                        .map(Element::children)
-                        .map(this::getBookFromBookElement)
-                        .collect(Collectors.toList())
-                ).orElseGet(ArrayList::new);
+            .map { doc: Document -> doc.getElementsByTag("tr") }
+            .map { elements: Elements ->
+                elements
+                    .stream()
+                    .filter(BookElementFilter())
+                    .map { obj: Element -> obj.children() }
+                    .map { bookElements: Elements -> getBookFromBookElement(bookElements) }
+                    .collect(Collectors.toList())
+            }
+            .orElseGet { ArrayList() }
     }
 
-    @NotNull
-    private Book getBookFromBookElement(Elements bookElements) {
-        Book book = new Book();
-        book.setID(bookElements.get(0).text());
-        Elements authors = bookElements.get(1).children();
-        StringBuilder author = new StringBuilder();
-        for (Element authorElements : authors) {
-            author.append(authorElements.text());
-            author.append(", ");
+    private fun getBookFromBookElement(bookElements: Elements): Book {
+        val book = Book()
+        book.id = bookElements[0].text()
+        val authors = bookElements[1].children()
+        val author = StringBuilder()
+        for (authorElements in authors) {
+            author.append(authorElements.text())
+            author.append(", ")
         }
-        author.setLength(author.length() - 2);
-        book.setAuthor(author.toString());
-        book.setTitle((bookElements.get(2).children()).get(0).text());
-        book.setPublisher(bookElements.get(3).text());
-        book.setYear(bookElements.get(4).text());
-        book.setPages(bookElements.get(5).text());
-        book.setLanguage(bookElements.get(6).text());
-        book.setSize(bookElements.get(7).text());
-        book.setExtension(bookElements.get(8).text());
-        book.setDownloadLink((bookElements.get(9).children()).get(0).attr("href"));
-        return book;
+        author.setLength(author.length - 2)
+        book.author = author.toString()
+        book.title = bookElements[2].children()[0].text()
+        book.publisher = bookElements[3].text()
+        book.year = bookElements[4].text()
+        book.pages = bookElements[5].text()
+        book.language = bookElements[6].text()
+        book.size = bookElements[7].text()
+        book.extension = bookElements[8].text()
+        book.downloadLink = bookElements[9].children()[0].attr("href")
+        return book
     }
-
 }

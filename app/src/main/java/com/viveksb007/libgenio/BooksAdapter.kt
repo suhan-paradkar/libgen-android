@@ -1,162 +1,155 @@
-package com.viveksb007.libgenio;
+package com.viveksb007.libgenio
 
-import android.app.DownloadManager;
-import android.content.Context;
-import android.net.Uri;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.app.DownloadManager
+import android.content.Context
+import android.net.Uri
+import android.os.Environment
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
+import androidx.recyclerview.widget.RecyclerView
+import com.viveksb007.libgenio.BooksAdapter.MyViewHolder
+import com.viveksb007.libgenio.model.Book
+import com.viveksb007.libgenio.R
+import org.jsoup.Jsoup
+import java.io.File
+import java.io.IOException
 
-import androidx.appcompat.widget.PopupMenu;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.viveksb007.libgenio.model.Book;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.MyViewHolder> {
-
-    private static final String TAG = "BooksAdapter";
-    private List<Book> bookList;
-    private Context context;
-
-    public BooksAdapter(Context context, List<Book> bookList) {
-        this.bookList = bookList;
-        this.context = context;
+class BooksAdapter(private val context: Context, private val bookList: List<Book>) :
+    RecyclerView.Adapter<MyViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val itemView: View =
+            LayoutInflater.from(parent.context).inflate(R.layout.book_card, parent, false)
+        return MyViewHolder(itemView)
     }
 
-    @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_card, parent, false);
-        return new MyViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        Book book = bookList.get(position);
-        holder.title.setText(book.getTitle());
-        holder.author.setText("By : " + book.getAuthor());
-        holder.fileSize.setText("Size : " + book.getSize());
-        holder.fileExtension.setText("Format : " + book.getExtension());
-        holder.pages.setText("Pages : " + book.getPages());
-        holder.language.setText("Language : " + book.getLanguage());
-        holder.year.setText("Year : " + book.getYear());
-        holder.overflowButton.setOnClickListener(view -> showPopupMenu(holder.overflowButton, position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return bookList.size();
-    }
-
-    private void showPopupMenu(View view, int position) {
-        PopupMenu popup = new PopupMenu(context, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.book_menu, popup.getMenu());
-        MyMenuItemClickListener itemClickListener = new MyMenuItemClickListener(position);
-        popup.setOnMenuItemClickListener(itemClickListener);
-        popup.show();
-    }
-
-    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
-
-        private int position;
-
-        public MyMenuItemClickListener(int position) {
-            this.position = position;
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.action_download:
-                    Toast.makeText(context, "Download Book", Toast.LENGTH_SHORT).show();
-                    downloadBook(position);
-                    return true;
-                case R.id.action_share:
-                    Toast.makeText(context, "Share Book Link", Toast.LENGTH_SHORT).show();
-                    shareLink(position);
-                    return true;
-            }
-            return false;
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val book = bookList[position]
+        holder.title.text = book.title
+        holder.author.text = "By : " + book.author
+        holder.fileSize.text = "Size : " + book.size
+        holder.fileExtension.text = "Format : " + book.extension
+        holder.pages.text = "Pages : " + book.pages
+        holder.language.text = "Language : " + book.language
+        holder.year.text = "Year : " + book.year
+        holder.overflowButton.setOnClickListener { view: View? ->
+            showPopupMenu(
+                holder.overflowButton,
+                position
+            )
         }
     }
 
-    private void shareLink(int position) {
-
+    override fun getItemCount(): Int {
+        return bookList.size
     }
 
-    private void downloadBook(int position) {
-        final String downloadLink = bookList.get(position).getDownloadLink();
-        final String fileName = bookList.get(position).getTitle() + '.' + bookList.get(position).getExtension();
-        new Thread(() -> {
-            try {
-                Log.v(TAG, downloadLink);
-                Document doc = Jsoup.connect(downloadLink).get();
-                if (doc == null) {
-                    new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "Error in fetching data.", Toast.LENGTH_SHORT).show());
-                    return;
+    private fun showPopupMenu(view: View, position: Int) {
+        val popup = PopupMenu(
+            context, view
+        )
+        val inflater = popup.menuInflater
+        inflater.inflate(R.menu.book_menu, popup.menu)
+        val itemClickListener = MyMenuItemClickListener(position)
+        popup.setOnMenuItemClickListener(itemClickListener)
+        popup.show()
+    }
+
+    internal inner class MyMenuItemClickListener(private val position: Int) :
+        PopupMenu.OnMenuItemClickListener {
+        override fun onMenuItemClick(menuItem: MenuItem): Boolean {
+            when (menuItem.itemId) {
+                R.id.action_download -> {
+                    Toast.makeText(context, "Download Book", Toast.LENGTH_SHORT).show()
+                    downloadBook(position)
+                    return true
                 }
-                Elements elements = doc.getElementsByTag("td");
-                String finalDownloadLink = "";
-                for (Element element : elements) {
-                    if ("center".equals(element.attr("align")) && "top".equals(element.attr("valign"))) {
-                        finalDownloadLink = (element.children()).get(0).attr("href");
-                        break;
+
+                R.id.action_share -> {
+                    Toast.makeText(context, "Share Book Link", Toast.LENGTH_SHORT).show()
+                    shareLink(position)
+                    return true
+                }
+            }
+            return false
+        }
+    }
+
+    private fun shareLink(position: Int) {}
+    private fun downloadBook(position: Int) {
+        val downloadLink = bookList[position].downloadLink
+        val fileName = bookList[position].title + '.' + bookList[position].extension
+        Thread(Runnable {
+            try {
+                Log.v(TAG, downloadLink?:"null")
+                val doc = Jsoup.connect(downloadLink).get()
+                if (doc == null) {
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(
+                            context, "Error in fetching data.", Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    return@Runnable
+                }
+                val elements = doc.getElementsByTag("td")
+                var finalDownloadLink = ""
+                for (element in elements) {
+                    if ("center" == element.attr("align") && "top" == element.attr("valign")) {
+                        finalDownloadLink = element.children()[0].attr("href")
+                        break
                     }
                 }
-                if ("".equals(finalDownloadLink)) {
-                    Log.v(TAG, "Link not found");
+                if ("" == finalDownloadLink) {
+                    Log.v(TAG, "Link not found")
                 } else {
-                    Log.v(TAG, finalDownloadLink);
-                    DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-                    DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(finalDownloadLink));
-                    File destinationFile = new File(Environment.getExternalStorageDirectory(), fileName);
-                    downloadRequest.setDescription("Downloading Book");
-                    downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-                    downloadRequest.setDestinationUri(Uri.fromFile(destinationFile));
-                    assert downloadManager != null;
-                    downloadManager.enqueue(downloadRequest);
+                    Log.v(TAG, finalDownloadLink)
+                    val downloadManager =
+                        context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                    val downloadRequest = DownloadManager.Request(Uri.parse(finalDownloadLink))
+                    val destinationFile = File(Environment.getExternalStorageDirectory(), fileName)
+                    downloadRequest.setDescription("Downloading Book")
+                    downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                    downloadRequest.setDestinationUri(Uri.fromFile(destinationFile))
+                    assert(downloadManager != null)
+                    downloadManager.enqueue(downloadRequest)
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
-
-        }).start();
+        }).start()
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var title: TextView
+        var author: TextView
+        var pages: TextView
+        var fileExtension: TextView
+        var fileSize: TextView
+        var language: TextView
+        var year: TextView
+        var overflowButton: ImageButton
 
-        public TextView title, author, pages, fileExtension, fileSize, language, year;
-        public ImageButton overflowButton;
-
-        public MyViewHolder(View view) {
-            super(view);
-            title = view.findViewById(R.id.tv_title);
-            author = view.findViewById(R.id.tv_author);
-            pages = view.findViewById(R.id.tv_pages);
-            fileExtension = view.findViewById(R.id.tv_file_extension);
-            fileSize = view.findViewById(R.id.tv_file_size);
-            overflowButton = view.findViewById(R.id.overflow_button);
-            language = view.findViewById(R.id.tv_language);
-            year = view.findViewById(R.id.tv_year);
+        init {
+            title = view.findViewById<TextView>(R.id.tv_title)
+            author = view.findViewById<TextView>(R.id.tv_author)
+            pages = view.findViewById<TextView>(R.id.tv_pages)
+            fileExtension = view.findViewById<TextView>(R.id.tv_file_extension)
+            fileSize = view.findViewById<TextView>(R.id.tv_file_size)
+            overflowButton = view.findViewById<ImageButton>(R.id.overflow_button)
+            language = view.findViewById<TextView>(R.id.tv_language)
+            year = view.findViewById<TextView>(R.id.tv_year)
         }
+    }
 
+    companion object {
+        private const val TAG = "BooksAdapter"
     }
 }

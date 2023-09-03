@@ -1,119 +1,101 @@
-package com.viveksb007.libgenio;
+package com.viveksb007.libgenio
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.viveksb007.libgenio.model.Book
+import com.viveksb007.libgenio.R
+import com.viveksb007.libgenio.databinding.ActivityMainBinding
+import org.jsoup.Jsoup
+import java.io.IOException
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.viveksb007.libgenio.model.Book;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG = "MainActivity";
-    private String BASE_URL = "http://libgen.rs/search.php?req=";
-    private List<Book> bookList = new ArrayList<>();
-    private RecyclerView recyclerView;
-    private BooksAdapter booksAdapter;
-    boolean doubleBackToExitPressedOnce = false;
-    private ProgressBar progressBar;
-    private SearchView searchView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        recyclerView = findViewById(R.id.book_recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        booksAdapter = new BooksAdapter(this, bookList);
-        recyclerView.setAdapter(booksAdapter);
-
-        progressBar = findViewById(R.id.progress_bar_cyclic);
-        progressBar.setVisibility(View.GONE);
-        searchView = findViewById(R.id.search_view);
-        searchView.setIconifiedByDefault(false);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchView.clearFocus();
-                progressBar.setVisibility(View.VISIBLE);
-                findBooks(query);
-                progressBar.setVisibility(View.GONE);
-                return true;
+class MainActivity : AppCompatActivity() {
+    private val BASE_URL = "http://libgen.rs/search.php?req="
+    private val bookList: MutableList<Book> = ArrayList()
+    private var recyclerView: RecyclerView? = null
+    private var booksAdapter: BooksAdapter? = null
+    var doubleBackToExitPressedOnce = false
+    private var progressBar: ProgressBar? = null
+    private var searchView: SearchView? = null
+    private lateinit var binding: ActivityMainBinding
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        val recyclerView = findViewById<RecyclerView>(R.id.book_recycler_view)
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
+        recyclerView.setLayoutManager(layoutManager)
+        recyclerView.setItemAnimator(DefaultItemAnimator())
+        recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
+        booksAdapter = BooksAdapter(this, bookList)
+        recyclerView.setAdapter(booksAdapter)
+        val progressBar = findViewById<ProgressBar>(R.id.progress_bar_cyclic)
+        progressBar.setVisibility(View.GONE)
+        val searchView = findViewById<SearchView>(R.id.search_view)
+        searchView.setIconifiedByDefault(false)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                searchView.clearFocus()
+                progressBar.setVisibility(View.VISIBLE)
+                findBooks(query)
+                progressBar.setVisibility(View.GONE)
+                return true
             }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
             }
-        });
+        })
     }
 
-    private void findBooks(final String query) {
-        new Thread(() -> {
+    private fun findBooks(query: String) {
+        Thread {
             try {
-                bookList.clear();
-                Document doc = Jsoup.connect(BASE_URL + query).get();
-                bookList.addAll(new BookExtractor().extractBooksFromDocument(doc));
-
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (bookList.size() == 0)
-                            Toast.makeText(MainActivity.this, "Nothing Found.", Toast.LENGTH_SHORT).show();
-                        else {
-                            updateListView();
-                        }
+                bookList.clear()
+                val doc = Jsoup.connect(BASE_URL + query).get()
+                bookList.addAll(BookExtractor().extractBooksFromDocument(doc))
+                Handler(Looper.getMainLooper()).post {
+                    if (bookList.size == 0) Toast.makeText(
+                        this@MainActivity,
+                        "Nothing Found.",
+                        Toast.LENGTH_SHORT
+                    ).show() else {
+                        updateListView()
                     }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
-        }).start();
+        }.start()
     }
 
-    private void updateListView() {
-        booksAdapter.notifyDataSetChanged();
-        Log.v(TAG, bookList.size() + "");
+    private fun updateListView() {
+        booksAdapter!!.notifyDataSetChanged()
+        Log.v(TAG, bookList.size.toString() + "")
     }
 
-    @Override
-    public void onBackPressed() {
+    override fun onBackPressed() {
         if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
+            super.onBackPressed()
+            return
         }
-
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Press BACK again to exit", Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
-            }
-        }, 2000);
+        doubleBackToExitPressedOnce = true
+        Toast.makeText(this, "Press BACK again to exit", Toast.LENGTH_SHORT).show()
+        Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
     }
 
+    companion object {
+        private const val TAG = "MainActivity"
+    }
 }
