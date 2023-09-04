@@ -1,4 +1,4 @@
-package com.viveksb007.libgenio
+package com.wisestwizard.scigen
 
 import android.app.DownloadManager
 import android.content.Context
@@ -16,9 +16,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
-import com.viveksb007.libgenio.BooksAdapter.MyViewHolder
-import com.viveksb007.libgenio.model.Book
-import com.viveksb007.libgenio.R
+import com.wisestwizard.scigen.BooksAdapter.MyViewHolder
+import com.wisestwizard.scigen.model.Book
 import org.jsoup.Jsoup
 import java.io.File
 import java.io.IOException

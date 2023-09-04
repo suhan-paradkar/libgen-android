@@ -1,4 +1,4 @@
-package com.viveksb007.libgenio.filter
+package com.wisestwizard.scigen.filter
 
 import org.jsoup.nodes.Element
 import java.util.function.Predicate

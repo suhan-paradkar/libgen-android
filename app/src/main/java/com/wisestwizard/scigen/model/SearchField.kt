@@ -1,4 +1,4 @@
-package com.viveksb007.libgenio.model
+package com.wisestwizard.scigen.model
 
 class SearchField {
     var searchQuery: String? = null

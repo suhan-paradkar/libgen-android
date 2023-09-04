@@ -1,4 +1,4 @@
-package com.viveksb007.libgenio
+package com.wisestwizard.scigen
 
 import android.os.Bundle
 import android.os.Handler
@@ -13,9 +13,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.viveksb007.libgenio.model.Book
-import com.viveksb007.libgenio.R
-import com.viveksb007.libgenio.databinding.ActivityMainBinding
+import com.wisestwizard.scigen.model.Book
+import com.wisestwizard.scigen.databinding.ActivityMainBinding
 import org.jsoup.Jsoup
 import java.io.IOException
 

@@ -1,7 +1,7 @@
-package com.viveksb007.libgenio
+package com.wisestwizard.scigen
 
-import com.viveksb007.libgenio.filter.BookElementFilter
-import com.viveksb007.libgenio.model.Book
+import com.wisestwizard.scigen.filter.BookElementFilter
+import com.wisestwizard.scigen.model.Book
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements

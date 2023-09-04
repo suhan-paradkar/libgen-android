@@ -1,4 +1,4 @@
-package com.viveksb007.libgenio.model
+package com.wisestwizard.scigen.model
 
 import android.util.Log
 
