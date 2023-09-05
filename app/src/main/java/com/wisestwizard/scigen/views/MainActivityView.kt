@@ -26,7 +26,6 @@ import com.wisestwizard.scigen.widget.SearchBarWidget
 
 @Composable
 fun MainLayout(
-    onQueryChange: (String) -> Unit,
     onQueryTextSubmit: (String) -> Unit,
     itemList: MutableList<Book> = ArrayList()
 ) {
@@ -40,7 +39,6 @@ fun MainLayout(
             color = MaterialTheme.colorScheme.background
         ) {
             MainScreen(
-                onQueryChange = onQueryChange,
                 onQueryTextSubmit = onQueryTextSubmit,
                 itemList = itemList
             )
@@ -51,7 +49,6 @@ fun MainLayout(
 
 @Composable
 fun MainScreen(
-    onQueryChange: (String) -> Unit,
     onQueryTextSubmit: (String) -> Unit,
     itemList: MutableList<Book> = ArrayList()
 ) {
@@ -61,9 +58,8 @@ fun MainScreen(
         horizontalArrangement = Arrangement.Center
     ) {
         SearchBarWidget(
-            onQueryChange = onQueryChange,
             onQueryTextSubmit = onQueryTextSubmit
-            )
+        )
         Booklist(itemList = itemList, context = context)
     }
 }
@@ -98,7 +94,6 @@ fun TopAppBarWithOverflowMenu(){
 fun Preview() {
     LibgenandroidTheme {
         MainLayout(
-            onQueryChange = { },
             onQueryTextSubmit = { })
     }
 }

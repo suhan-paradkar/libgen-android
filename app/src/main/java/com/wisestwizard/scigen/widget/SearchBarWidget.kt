@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SearchBarWidget(modifier: Modifier = Modifier, onQueryChange: (String) -> Unit, onQueryTextSubmit: (String) -> Unit) {
+fun SearchBarWidget(onQueryTextSubmit: (String) -> Unit) {
     val query = remember { mutableStateOf("") }
     Surface(
         modifier = Modifier.padding(20.dp),
@@ -32,7 +32,7 @@ fun SearchBarWidget(modifier: Modifier = Modifier, onQueryChange: (String) -> Un
             value = query.value,
             modifier = Modifier.border(BorderStroke(0.dp, Color.Transparent))
                 .fillMaxWidth(),
-            onValueChange = { query.value = it; onQueryChange(it) },
+            onValueChange = { query.value = it},
             placeholder = {
                 SearchHint(text = "Search")
             },

@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
         val view = ComposeView(this)
         view.setContent {
             MainLayout(
-                onQueryChange = { SearchUtils().onQueryTextSubmit(query = it, context = this) },
                 onQueryTextSubmit = { SearchUtils().onQueryTextSubmit(query = it, context = this) },
                 itemList = bookList
             )

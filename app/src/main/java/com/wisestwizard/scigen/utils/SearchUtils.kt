@@ -32,7 +32,11 @@ class SearchUtils {
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
-                        updateListView(bookList)
+                        Toast.makeText(
+                            context,
+                            "Found " + bookList.size + " books.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             } catch (e: IOException) {
@@ -40,8 +44,4 @@ class SearchUtils {
             }
         }.start()
     }
-    fun updateListView(MutableList: MutableList<Book>) {
-
-    }
-
 }
