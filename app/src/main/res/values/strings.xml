@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LibgenIO</string>
+    <string name="app_name">SciGen</string>
     <string name="author_name">Author Name</string>
     <string name="book_title">Book Title</string>
     <string name="file_extension">File Extension</string>

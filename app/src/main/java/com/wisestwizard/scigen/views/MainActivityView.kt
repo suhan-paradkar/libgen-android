@@ -3,44 +3,93 @@ package com.wisestwizard.scigen.views
 import Booklist
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.wisestwizard.scigen.model.Book
 import com.wisestwizard.scigen.views.ui.theme.LibgenandroidTheme
 import com.wisestwizard.scigen.widget.SearchBarWidget
 
 @Composable
-fun MainLayout(modifier: Modifier, query: String, onQueryChange: (String) -> Unit, onQueryTextSubmit: (String) -> Unit, setActiveStatus: () -> Boolean, itemList: MutableList<Book> = ArrayList()) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+fun MainLayout(
+    onQueryChange: (String) -> Unit,
+    onQueryTextSubmit: (String) -> Unit,
+    itemList: MutableList<Book> = ArrayList()
+) {
+    Scaffold(
+        topBar = {
+            TopAppBarWithOverflowMenu()
+        }
     ) {
-        Mainscreen(query = query, modifier = modifier, onQueryChange = onQueryChange,onQueryTextSubmit = onQueryTextSubmit, setActivestatus = setActiveStatus, itemList = itemList)
+        Surface(
+            modifier = Modifier.padding(it),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            MainScreen(
+                onQueryChange = onQueryChange,
+                onQueryTextSubmit = onQueryTextSubmit,
+                itemList = itemList
+            )
+        }
     }
+
 }
 
 @Composable
-fun Mainscreen(query: String, modifier: Modifier = Modifier, onQueryChange: (String) -> Unit, onQueryTextSubmit: (String) -> Unit, setActivestatus: () -> Boolean, itemList: MutableList<Book> = ArrayList()) {
+fun MainScreen(
+    onQueryChange: (String) -> Unit,
+    onQueryTextSubmit: (String) -> Unit,
+    itemList: MutableList<Book> = ArrayList()
+) {
     val context = LocalContext.current
     Row(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
         SearchBarWidget(
-            query = query,
             onQueryChange = onQueryChange,
-            onQueryTextSubmit = onQueryTextSubmit,
-            activestatus = { setActivestatus() },
-            ){}
+            onQueryTextSubmit = onQueryTextSubmit
+            )
         Booklist(itemList = itemList, context = context)
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopAppBarWithOverflowMenu(){
+    TopAppBar(
+        title = {
+            Text(text = "SciGen")
+        },
+        actions = {
+            IconButton(onClick = {}) {
+                Icon(
+                    imageVector = Icons.Filled.MoreVert,
+                    contentDescription = "Menu"
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.onTertiary,
+            titleContentColor = MaterialTheme.colorScheme.tertiary,
+            navigationIconContentColor = MaterialTheme.colorScheme.primary,
+            actionIconContentColor = MaterialTheme.colorScheme.secondary
+        ),
+    )
 }
 
 
@@ -48,6 +97,8 @@ fun Mainscreen(query: String, modifier: Modifier = Modifier, onQueryChange: (Str
 @Composable
 fun Preview() {
     LibgenandroidTheme {
-        Mainscreen(query = "Hello", modifier = Modifier, onQueryTextSubmit = { }, onQueryChange = { }, setActivestatus = { false })
+        MainLayout(
+            onQueryChange = { },
+            onQueryTextSubmit = { })
     }
 }
