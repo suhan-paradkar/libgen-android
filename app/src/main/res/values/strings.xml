@@ -12,4 +12,7 @@
     <string name="download">Download</string>
     <string name="share">Share</string>
     <string name="overflow_button">Overflow Button</string>
+    <string name="title_activity_main_view">MainActivityView</string>
+    <string name="title_activity_search_bar_widget">SearchBarWidget</string>
+    <string name="title_activity_progress_bar">ProgressBar</string>
 </resources>

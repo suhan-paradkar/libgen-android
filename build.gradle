@@ -11,31 +11,23 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.7.20'
+    id 'org.jetbrains.kotlin.android' version '1.8.10' apply false
 }
 
 allprojects {
     repositories {
         google()
-        mavenCentral() // Move the 'mavenCentral()' entry to the 'allprojects' section.
+        mavenCentral()
+        maven { url 'https://maven.google.com' }
     }
 }
 
 // Define your dependencies within the 'dependencies' block
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-}
-
-// Configure Kotlin options for all Kotlin tasks
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }
