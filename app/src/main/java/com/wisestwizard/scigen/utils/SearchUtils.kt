@@ -9,15 +9,13 @@ import com.wisestwizard.scigen.model.Book
 import org.jsoup.Jsoup
 import java.io.IOException
 
-
-val bookList: MutableList<Book> = ArrayList()
 class SearchUtils {
 
-    fun onQueryTextSubmit(query: String, context: Context): Unit {
-        findBooks(query, context)
+    fun onQueryTextSubmit(query: String, context: Context, bookList: MutableList<Book>): Unit {
+        findBooks(query, context, bookList)
     }
 
-    private fun findBooks(query: String, context: Context) {
+    private fun findBooks(query: String, context: Context, bookList: MutableList<Book>) {
         var BASE_URL = "http://libgen.rs/search.php?req="
         Thread {
             try {

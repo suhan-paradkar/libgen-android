@@ -9,7 +9,7 @@ import java.util.Optional
 import java.util.stream.Collectors
 
 internal class BookExtractor {
-    fun extractBooksFromDocument(document: Document?): List<Book> {
+    fun extractBooksFromDocument(document: Document?): MutableList<Book> {
         return Optional.ofNullable(document)
             .map { doc: Document -> doc.getElementsByTag("tr") }
             .map { elements: Elements ->
