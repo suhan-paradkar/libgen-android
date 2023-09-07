@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.wisestwizard.scigen.utils.SearchUtils
 
 @Composable
 fun SearchBarWidget(onQueryTextSubmit: (String) -> Unit) {
@@ -41,7 +42,7 @@ fun SearchBarWidget(onQueryTextSubmit: (String) -> Unit) {
                     imageVector = Icons.Filled.Search,
                     contentDescription = "Search",
                     modifier = Modifier.clickable {
-                        onQueryTextSubmit(query.value)
+                        SearchUtils.onQueryTextSubmit(query.value)
                     }
                 )
             },

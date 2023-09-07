@@ -25,9 +25,7 @@ import com.wisestwizard.scigen.widget.BookListWidget
 import com.wisestwizard.scigen.widget.SearchBarWidget
 
 @Composable
-fun MainLayout(
-    onQueryTextSubmit: (String) -> Unit
-) {
+fun MainLayout() {
     Scaffold(
         topBar = {
             TopAppBarWithOverflowMenu()
@@ -37,26 +35,20 @@ fun MainLayout(
             modifier = Modifier.padding(it),
             color = MaterialTheme.colorScheme.background
         ) {
-            MainScreen(
-                onQueryTextSubmit = onQueryTextSubmit
-            )
+            MainScreen()
         }
     }
 
 }
 
 @Composable
-fun MainScreen(
-    onQueryTextSubmit: (String) -> Unit,
-) {
+fun MainScreen() {
     val context = LocalContext.current
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        SearchBarWidget(
-            onQueryTextSubmit = onQueryTextSubmit
-        )
+        SearchBarWidget()
         BookListWidget(context = context)
     }
 }
@@ -90,7 +82,6 @@ fun TopAppBarWithOverflowMenu(){
 @Composable
 fun Preview() {
     LibgenandroidTheme {
-        MainLayout(
-            onQueryTextSubmit = { })
+        MainLayout()
     }
 }
