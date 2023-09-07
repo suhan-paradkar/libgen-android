@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.wisestwizard.scigen.utils.SearchUtils
 
 @Composable
-fun SearchBarWidget(onQueryTextSubmit: (String) -> Unit) {
+fun SearchBarWidget() {
     val query = remember { mutableStateOf("") }
     Surface(
         modifier = Modifier.padding(20.dp),

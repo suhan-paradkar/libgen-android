@@ -6,14 +6,14 @@ import android.os.Looper
 import android.widget.Toast
 import com.wisestwizard.scigen.BookExtractor
 import com.wisestwizard.scigen.model.Book
-import com.wisestwizard.scigen.widget.BookListWidget
+import com.wisestwizard.scigen.widget.BookListWidget.itemList
 import org.jsoup.Jsoup
 import java.io.IOException
 
 class SearchUtils {
 
     fun onQueryTextSubmit(query: String, context: Context): Unit {
-        findBooks(query, context, BookListWidget.itemList)
+        findBooks(query, context, itemList)
     }
 
     private fun findBooks(query: String, context: Context, bookList: MutableList<Book>) {
