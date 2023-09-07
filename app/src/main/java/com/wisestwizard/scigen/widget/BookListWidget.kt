@@ -10,7 +10,7 @@ import com.wisestwizard.scigen.utils.downloadBook
 import com.wisestwizard.scigen.views.BookItemView
 
 @Composable
-fun Booklist(itemList: MutableList<Book> = ArrayList(), context: Context) {
+fun BookList(itemList: MutableList<Book> = ArrayList(), context: Context) {
     if (itemList.size == 0) {
         return
     }

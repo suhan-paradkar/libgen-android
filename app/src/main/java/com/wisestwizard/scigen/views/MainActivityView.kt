@@ -1,6 +1,5 @@
 package com.wisestwizard.scigen.views
 
-import Booklist
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.wisestwizard.scigen.model.Book
 import com.wisestwizard.scigen.views.ui.theme.LibgenandroidTheme
+import com.wisestwizard.scigen.widget.BookList
 import com.wisestwizard.scigen.widget.SearchBarWidget
 
 @Composable
@@ -60,7 +60,7 @@ fun MainScreen(
         SearchBarWidget(
             onQueryTextSubmit = onQueryTextSubmit
         )
-        Booklist(itemList = itemList, context = context)
+        BookList(itemList = itemList, context = context)
     }
 }
 
