@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.wisestwizard.scigen.model.Book
 import com.wisestwizard.scigen.views.ui.theme.LibgenandroidTheme
-import com.wisestwizard.scigen.widget.BookList
+import com.wisestwizard.scigen.widget.BookListWidget
 import com.wisestwizard.scigen.widget.SearchBarWidget
 
 @Composable
@@ -60,7 +60,7 @@ fun MainScreen(
         SearchBarWidget(
             onQueryTextSubmit = onQueryTextSubmit
         )
-        BookList(itemList = itemList, context = context)
+        BookListWidget(itemList = itemList, context = context)
     }
 }
 

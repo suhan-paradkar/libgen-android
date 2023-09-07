@@ -1,3 +1,4 @@
+package com.wisestwizard.scigen.widget
 
 import android.content.Context
 import androidx.compose.foundation.layout.padding
@@ -10,7 +11,7 @@ import com.wisestwizard.scigen.utils.downloadBook
 import com.wisestwizard.scigen.views.BookItemView
 
 @Composable
-fun BookList(itemList: MutableList<Book> = ArrayList(), context: Context) {
+fun BookListWidget(itemList: MutableList<Book> = ArrayList(), context: Context) {
     if (itemList.size == 0) {
         return
     }
