@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
 import com.wisestwizard.scigen.model.Book
-import com.wisestwizard.scigen.utils.SearchUtils
 import com.wisestwizard.scigen.views.MainLayout
 
 class MainActivity : AppCompatActivity() {
@@ -15,9 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val view = ComposeView(this)
         view.setContent {
-            MainLayout(
-                onQueryTextSubmit = { SearchUtils().onQueryTextSubmit(query = it, context = this, bookList) }
-            )
+            MainLayout()
         }
         setContentView(view)
     }

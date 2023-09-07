@@ -18,7 +18,7 @@ fun BookListWidget(context: Context) {
         mutableStateListOf<Book>()
     }
     LazyColumn(modifier = Modifier.padding(16.dp)) {
-        items.let(count = itemList.size, itemContent = { index ->
+        items(count = itemList.size, itemContent = { index ->
             BookItemView(
                 title = itemList[index].title?:"",
                 author = itemList[index].author?:"",
