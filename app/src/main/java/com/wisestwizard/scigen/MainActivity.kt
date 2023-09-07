@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import com.wisestwizard.scigen.model.Book
 import com.wisestwizard.scigen.utils.SearchUtils
@@ -17,12 +15,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val view = ComposeView(this)
         view.setContent {
-            val bookList = remember {
-                mutableStateListOf<Book>()
-            }
             MainLayout(
-                onQueryTextSubmit = { SearchUtils().onQueryTextSubmit(query = it, context = this, bookList) },
-                itemList = bookList
+                onQueryTextSubmit = { SearchUtils().onQueryTextSubmit(query = it, context = this, bookList) }
             )
         }
         setContentView(view)

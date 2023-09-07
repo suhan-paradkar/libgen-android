@@ -26,8 +26,7 @@ import com.wisestwizard.scigen.widget.SearchBarWidget
 
 @Composable
 fun MainLayout(
-    onQueryTextSubmit: (String) -> Unit,
-    itemList: MutableList<Book> = ArrayList()
+    onQueryTextSubmit: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -39,8 +38,7 @@ fun MainLayout(
             color = MaterialTheme.colorScheme.background
         ) {
             MainScreen(
-                onQueryTextSubmit = onQueryTextSubmit,
-                itemList = itemList
+                onQueryTextSubmit = onQueryTextSubmit
             )
         }
     }
@@ -50,7 +48,6 @@ fun MainLayout(
 @Composable
 fun MainScreen(
     onQueryTextSubmit: (String) -> Unit,
-    itemList: MutableList<Book> = ArrayList()
 ) {
     val context = LocalContext.current
     Row(
@@ -60,7 +57,7 @@ fun MainScreen(
         SearchBarWidget(
             onQueryTextSubmit = onQueryTextSubmit
         )
-        BookListWidget(itemList = itemList, context = context)
+        BookListWidget(context = context)
     }
 }
 
